@@ -1,4 +1,5 @@
 # Drop-Out-Prediction
+Predicts if a student will drop out using 12 different machine learning algorithsm
 
 Install requirements:
 
