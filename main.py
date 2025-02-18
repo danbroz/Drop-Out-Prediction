@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from cassandra.cluster import Cluster
 
 # ---------------------------------------------------------------------------
 # ASSUMPTION: The following trained models are already available in the scope.
@@ -18,6 +19,42 @@ import numpy as np
 #
 # For this example, we assume these models are already imported and trained.
 # ---------------------------------------------------------------------------
+
+def load_new_student_data_from_cassandra():
+    """
+    Connects to the Cassandra database and loads ~70 rows of new student data
+    from the 'newStudents' table.
+    
+    Expected columns in the 'newStudents' table:
+        - attendance: Numeric value indicating attendance rate or days attended.
+        - prev_gpa: The student's previous year's GPA.
+    
+    Returns:
+        new_student_df (pd.DataFrame): DataFrame with columns 'attendance' and 'prev_gpa'.
+    """
+    # Connect to the Cassandra cluster (adjust IP if necessary)
+    cluster = Cluster(['127.0.0.1'])
+    # Connect to the keyspace (assumed to be 'school_data')
+    session = cluster.connect('school_data')
+    
+    # Define a query to fetch the new student data (70 rows)
+    query = "SELECT attendance, prev_gpa FROM newStudents LIMIT 70"
+    rows = session.execute(query)
+    
+    # Convert the rows to a list of dictionaries
+    data = []
+    for row in rows:
+        data.append({
+            'attendance': row.attendance,
+            'prev_gpa': row.prev_gpa
+        })
+    
+    # Shutdown the Cassandra connection
+    session.shutdown()
+    cluster.shutdown()
+    
+    # Return the data as a DataFrame
+    return pd.DataFrame(data)
 
 def aggregate_new_student_features(new_student_df):
     """
@@ -82,11 +119,10 @@ def majority_vote(predictions):
     return 1 if votes > total / 2 else 0
 
 def main():
-    # Step 1: Load the new student CSV data (70 rows for one student)
-    new_student_file = "new_student_data.csv"
-    new_student_df = pd.read_csv(new_student_file)
+    # Step 1: Load the new student data from the Cassandra table 'newStudents'
+    new_student_df = load_new_student_data_from_cassandra()
     
-    # Aggregate the 70 rows to form a single feature vector.
+    # Aggregate the ~70 rows to form a single feature vector.
     feature_vector = aggregate_new_student_features(new_student_df)
     
     # Step 2: Create a dictionary of all trained models.
