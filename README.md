@@ -17,6 +17,6 @@ Load a new student data in CSV format called ```new_student_data.csv``` into a C
 
 ```python loadNewStudentTable.py```
 
-Predict if a student is at risk of dropping out via any of the 12 models:
+Predict if a student is at risk of dropping out via any of the 16 models:
 
 ```python main.py```
