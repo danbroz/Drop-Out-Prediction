@@ -19,7 +19,3 @@ Load a new student data in CSV format called ```new_student_data.csv``` into a C
 Predict if a student is at risk of dropping out via any of the 12 models:
 
 ```python main.py```
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/remotes/origin/main
