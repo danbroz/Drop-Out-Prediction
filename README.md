@@ -20,3 +20,5 @@ Load a new student data in CSV format called ```new_student_data.csv``` into a C
 Predict if a student is at risk of dropping out via any of the 16 models:
 
 ```python main.py```
+
+If you want to turn this into a profitable application or program, we can make more money together than going alone.  Contact me at danbroz@gmail.com
